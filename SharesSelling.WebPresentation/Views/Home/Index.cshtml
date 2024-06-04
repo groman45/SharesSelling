@@ -1,0 +1,87 @@
+﻿@model SaleRequestDto
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="card">
+            <div class="card-body">
+                <form>
+                    <h5>Calculation of profit (loss) from the sale of shares</h5>
+                    <div class="form-group">
+                        <label for="numberOfShares ">Number of shares</label>
+                        @Html.EditorFor(model => model.NumberOfShares, new { htmlAttributes = new { @class = "form-control", @type= "number",
+                    @aria_describedby = "numberOfSharesHelp", @placeholder="Enter Number of shares" } })
+                        <small id="numberOfSharesHelp" class="form-text text-muted">Enter the number of shares you want to sell.</small>
+                        @Html.ValidationMessageFor(model => model.NumberOfShares, "", new { @class = "text-danger"} )
+                    </div>
+                    <div class="form-group">
+                        <label for="pricePerShare">Price per share</label>
+
+                        @Html.EditorFor(model => model.PricePerShare, new { htmlAttributes = new { @class = "form-control", @type= "input",
+                            @aria_describedby = "pricePershareHelp", @placeholder="Enter price per share" } })
+
+                        <small id="pricePershareHelp" class="form-text text-muted">Enter the price per share for the sale</small>
+                        @Html.ValidationMessageFor(model => model.PricePerShare, "", new { @class = "text-danger"} )
+                    </div>
+                    <div class="form-group">
+                        <label for="pricePershare ">Strategy</label>                        
+
+                        @* @Html.DropDownListFor(m => m.StrategyId,
+                            new SelectList(Enum.GetValues(typeof(SaleCalculationStrategyType))),
+                            "", new { @class = "form-select" }) *@                      
+
+                        @Html.DropDownListFor(model => model.StrategyId, new List<SelectListItem>{
+                                new SelectListItem{Text="FIFO", Value="FIFO", Selected = true},
+                                new SelectListItem{Text="LIFO", Value="LIFO"},
+                            },null, new { @class = "form-select" })
+
+                    </div>
+                    <br />
+
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    }
+
+    <br />
+    <div class="text-muted pt-lg-5" >
+        <div class="card">
+            <div class="card-body">
+                <h5 class="text-center my-3 pb-3">List of available shares for sale retrieved from the repository:</h5>
+                <table class="table table-sm table-hover p-5" style="color: #6c757d; --bs-table-striped-color: #6c757d;">
+                    <thead>
+                        <tr>
+                            @*  <th scope="col">Id</th> *@
+                            <th scope="col">Ticker</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.stockData != null)
+                            foreach (var item in ViewBag.stockData)
+                            {
+                                <tr>
+                                    @* <td scope="row">@item.Id</td> *@
+                                    <td scope="row">@item.StockTicker</td>
+                                    <td scope="row">@item.Date.ToString("MMMMM yyyy")</td>
+                                    <td scope="row">@item.Price.ToString("C")</td>
+                                    <td scope="row">@item.Count</td>
+                                </tr>
+                            }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

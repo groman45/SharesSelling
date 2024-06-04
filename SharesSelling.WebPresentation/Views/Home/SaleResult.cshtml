@@ -1,0 +1,51 @@
+﻿@model SaleResultDto
+@{
+    ViewData["Title"] = "Sale results";
+}
+
+<div class="card">
+    <div class="card-body">
+
+        <h5>@ViewData["Title"]</h5>
+        
+        @if (Model.Succeeded)
+        {
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Number of shares</th>
+                    <th scope="col">Cost basis per share</th>                 
+                </tr>
+            </thead>
+            <tbody>
+                <tr>                   
+                    <td>Sold shares</td>
+                    <td>@Html.DisplayFor(model => model.SoldNumberOfShares)</td>
+                    <td>@Model.CostBasisSoldShares.ToString("C")</td>
+                </tr>
+                <tr>                  
+                    <td>Remaining shares</td>
+                    <td>@Html.DisplayFor(model => model.RemainingNumberOfShares)</td>
+                    <td>@Model.CostBasisRemainingShares.ToString("C")</td>
+                </tr>
+                    <tr class="@(Model.Profit >= 0 ? "table-success" : "table-danger")">
+                    <td>Total @(Model.Profit >= 0 ? "Profit" : "Loss")</td>
+                    <td colspan="2">@Model.Profit.ToString("C")</td>
+                </tr>
+            </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="alert alert-warning" role="alert">
+                @Model.Error
+            </div>            
+        }
+
+        <a href='@Url.Action("Index", "Home")'>
+            <input type='button' value='< Back to Calculation' class="btn btn-primary" />
+        </a>
+        
+    </div>
+</div>
